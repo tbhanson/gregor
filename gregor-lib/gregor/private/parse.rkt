@@ -55,8 +55,8 @@
                         #:locale [locale (current-locale)])
   (parse-temporal input pattern ci? locale
                   (λ (fields)
-                  (match (fields->datetime+tz fields err)
-                    [(cons dt _) dt]))))
+                    (match (fields->datetime+tz fields err)
+                      [(cons dt _) dt]))))
 
 (define (parse-date input
                     pattern

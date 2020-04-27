@@ -30,6 +30,28 @@
          (check-equal? (parse-datetime abbr-input abbr-pat) (datetime 2015 3 20 16 22))
          (check-equal? (parse-moment abbr-input abbr-pat) (moment 2015 3 20 16 22 #:tz "America/Montreal"))))
 
+
+     (test-suite
+      "posted a question https://groups.google.com/forum/m/?hl=en#!topic/racket-users/UVw81Q_q3_E"
+      "some datetime particulars"
+      (check-equal?
+       (parse-datetime "2015-03-15T02:02:02-04:00" "yyyy-MM-dd'T'HH:mm:ssxxx") (datetime 2015 3 15 2 2 2))
+      (parameterize ([current-locale "en"])
+        (check-equal?
+         (parse-datetime "21 Jun 2015 15:45:40" "dd MMM yyyy HH:mm:ss") (datetime 2015 6 21 15 45 40)))
+
+      (check-exn
+       exn:gregor:parse?
+       (lambda ()
+         (parse-datetime  "21 Jun 2015 15:45:40 -0000" "yyyy-MM-dd'T'HH:mm:ssxxx")))
+;      (check-equal?
+;       (parsable-as-datetime? "2015-03-15T02:02:02-04:00" "yyyy-MM-dd'T'HH:mm:ssxxx")
+;       #t)
+;      (check-equal?
+;       (parsable-as-datetime?"21 Jun 2015 15:45:40 -0000" "yyyy-MM-dd'T'HH:mm:ssxxx")
+;       #f)
+      )
+     
      (test-suite "era [G]"
        (check-equal? (->year (parse-date "2000 BC" "y G")) -1999)
        (check-equal? (->year (parse-date "2000 AD" "y G")) 2000)
