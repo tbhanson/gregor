@@ -39,17 +39,37 @@
       (parameterize ([current-locale "en"])
         (check-equal?
          (parse-datetime "21 Jun 2015 15:45:40" "dd MMM yyyy HH:mm:ss") (datetime 2015 6 21 15 45 40)))
-
+      (parameterize ([current-locale "en"])
+        (check-equal?
+         (parse-datetime "Sun, 21 Jun 2015 17:50:44 -0500 CDT" "EEE, dd MMM yyyy HH:mm:ss xxxx zzz") (datetime 2015 6 21 17 50 44)))
+      ; not supported (or really supportable due to ambiguities
+      ; cf. https://github.com/97jaz/gregor/issues/25
+;      (parameterize ([current-locale "en"])
+;        (check-equal?
+;         (parse-datetime "Sun, 21 Jun 2015 17:50:44 -0500 (CDT)" "EEE, dd MMM yyyy HH:mm:ss xxxx (zzz)") (datetime 2015 6 21 17 50 44)))
+;      (parameterize ([current-locale "en"])
+;        (check-equal?
+;         (parse-datetime "Sun, 21 Jun 2015 17:50:44 -0500 (CDT)" "EEE, dd MMM yyyy HH:mm:ss xxxx (zzzz)") (datetime 2015 6 21 17 50 44)))
+       
       (check-exn
        exn:gregor:parse?
        (lambda ()
          (parse-datetime  "21 Jun 2015 15:45:40 -0000" "yyyy-MM-dd'T'HH:mm:ssxxx")))
-;      (check-equal?
-;       (parsable-as-datetime? "2015-03-15T02:02:02-04:00" "yyyy-MM-dd'T'HH:mm:ssxxx")
-;       #t)
-;      (check-equal?
-;       (parsable-as-datetime?"21 Jun 2015 15:45:40 -0000" "yyyy-MM-dd'T'HH:mm:ssxxx")
-;       #f)
+
+      ; failing test because a different exception is raised
+      ; ../../../../../Library/Racket/7.6/pkgs/gregor-lib/gregor/private/pattern/ast/zone.rkt:40:2: match: no matching clause for (Zone ... 'offset-name 'short)
+      (check-exn
+       exn:gregor:parse?
+       (lambda ()
+         (parse-datetime "Sun, 21 Jun 2015 17:50:44 -0500 (CDT)" "EEE, dd MMM yyyy HH:mm:ss xxxx (zzzz)")))
+      
+      ; tbh: a kind of letter-of-intent
+      ;      (check-equal?
+      ;       (parsable-as-datetime? "2015-03-15T02:02:02-04:00" "yyyy-MM-dd'T'HH:mm:ssxxx")
+      ;       #t)
+      ;      (check-equal?
+      ;       (parsable-as-datetime?"21 Jun 2015 15:45:40 -0000" "yyyy-MM-dd'T'HH:mm:ssxxx")
+      ;       #f)
       )
      
      (test-suite "era [G]"
